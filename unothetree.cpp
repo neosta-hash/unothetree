@@ -15,7 +15,7 @@ using namespace std;
 
 #define DOCK() do{                       \
                                   int dock;     \
-                                  cin>>dock;    \
+                                  cin >> dock;    \
 }while(0)
 
 struct TreeNode
@@ -29,30 +29,73 @@ struct TreeNode
 class Tree
 {
 public:
-    TreeNode* createTreeFromArray()
+    TreeNode* createTreeFromArray(vector<int>& nodes)
     {
-        
+        int n = nodes.size();
+        if (0 == n)
+            return nullptr;
+
+        vector<TreeNode*> tree_nodes(n, nullptr);
+        int pi = 0;
+        bool lc = true;
+
+        for (int i = 0; i < n; i++)
+        {
+            if (!nodes[i])
+            {
+                if (!lc)
+                    pi++;
+                lc = !lc;
+            }
+            else
+            {
+                TreeNode *node = new TreeNode(nodes[i]);
+                tree_nodes[i] = node;
+                if (0 == i)
+                    continue;
+
+                if (lc)
+                    tree_nodes[pi]->left = node;
+                else
+                    tree_nodes[pi++]->right = node;
+                lc = !lc;
+            }
+            while (nullptr == tree_nodes[pi])
+                pi++;
+        }
+
+        return tree_nodes[0];
     }
 
-    int countTreeHeight()
+    int countTreeHeight(TreeNode *node)
     {
-        
+        return 0;
     }
 
-    void printNodesArray()
+    void printNodesArray(vector<int>& nodes)
     {
-        
+        int n = nodes.size();
+
+        cout << "Nodes: [ ";
+        for (int i = 0; i < n; i++)
+        {
+            cout << nodes[i];
+            if (i != n - 1)
+                cout << ",";
+            cout << " ";
+        }
+        cout << "]" << endl;
     }
 
     // 655. Print Binary Tree
-    void renderMatrix()
+    void renderMatrix(TreeNode *pNode, int treeHeight, int row, int col, vector<vector<string>>& matrix)
     {
-
+        
     }
 
     void printTree(TreeNode* root)
     {
-
+        
     }
 };
 
@@ -70,31 +113,19 @@ int main()
     Solution solu;
 
     // 655. Print Binary Tree
-    // vector<int> nodes = { 1, NULL, 2, NULL, 3, NULL, 4 };
-    // vector<TreeNode*> parentNodes(nodes.size(), nullptr);
-    TreeNode* pTreeRoot2 = nullptr;
-
-    // tree.printNodesArray(nodes);
-    // pTreeRoot2 = tree.createTreeFromArray(nodes, 0, 1, parentNodes);
-    // tree.printTree(pTreeRoot2);
-
-    // nodes = { 3, 4, 6, NULL, NULL, 7, 9, 11, NULL, NULL, 13 };
-    // parentNodes.assign(nodes.size(), nullptr);
-    // tree.printNodesArray(nodes);
-    // pTreeRoot2 = tree.createTreeFromArray(nodes, 0, 1, parentNodes);
-    // tree.printTree(pTreeRoot2);
-
-    // nodes = { 56, 48, 59, 39, 52, 57, 69, 27, 44, 50, 54, NULL, 58, 66, NULL, NULL, NULL, 40, NULL, NULL, NULL, NULL, 55, NULL, NULL, NULL, 68, 38 };
+    vector<int> nodes = { 56, 48, 59, 39, 52, 57, 69, 27, 44, 50, 54,
+                            NULL, 58, 66, NULL, NULL, NULL, 40, NULL,
+                            NULL, NULL, NULL, 55, NULL, NULL, NULL, 68, 38 };
     // nodes = { 5, 3, 6, 2, 4, NULL,7, NULL, 1 };
     // nodes = { 8, 3, 5, NULL, 9, NULL, NULL, 9, 5 };
     // nodes = { 1, 2, 3, NULL, NULL, NULL, -10, 11, 20 };
-    // nodes = { -10,9,20,NULL,NULL,15,7 };
-    // nodes = { 9,6,-3,NULL,NULL,-6,2,NULL,NULL,2,NULL,-6,-6,-6 };
-    // nodes = { 5,4,8,11,NULL,13,4,7,2,NULL,NULL,NULL,1 };
-    // parentNodes.assign(nodes.size(), nullptr);
-    // tree.printNodesArray(nodes);
-    // pTreeRoot2 = tree.createTreeFromArray(nodes, 0, 1, parentNodes);
-    // tree.printTree(pTreeRoot2);
+    // nodes = { -10, 9, 20, NULL, NULL, 15, 7 };
+    // nodes = { 9, 6, -3, NULL, NULL, -6, 2, NULL, NULL, 2, NULL, -6, -6, -6 };
+    // nodes = { 5, 4, 8, 11, NULL, 13, 4, 7, 2, NULL, NULL, NULL, 1 };
+    // nodes = { 3, 4, 6, NULL, NULL, 7, 9, 11, NULL, NULL, 13 };
+    tree.printNodesArray(nodes);
+    TreeNode* root = tree.createTreeFromArray(nodes);
+    tree.printTree(root);
 
     // 94. Binary Tree Inorder Traversal
     // vector<int> inorder = solu.inorderTraversal(pTreeRoot);
