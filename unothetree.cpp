@@ -69,6 +69,13 @@ public:
 
     int countTreeHeight(TreeNode *node)
     {
+        if (node)
+        {
+            int lc = 1 + countTreeHeight(node->left);
+            int rc = 1 + countTreeHeight(node->right);
+            return max(lc, rc);
+        }
+
         return 0;
     }
 
@@ -76,7 +83,7 @@ public:
     {
         int n = nodes.size();
 
-        cout << "Nodes: [ ";
+        cout << "nodes: [ ";
         for (int i = 0; i < n; i++)
         {
             cout << nodes[i];
@@ -88,14 +95,49 @@ public:
     }
 
     // 655. Print Binary Tree
-    void renderMatrix(TreeNode *pNode, int treeHeight, int row, int col, vector<vector<string>>& matrix)
+    void renderMatrix(TreeNode *node, int k, int row, int col, vector<vector<string>>& matrix)
     {
+        if (!node)
+            return;
         
+        matrix[row][col] = to_string(node->val);
+        int offset = pow(2, k);
+        renderMatrix(node->left, k-1, row+1, col-offset, matrix);
+        renderMatrix(node->right, k-1, row+1, col+offset, matrix);
+    }
+
+    void fillMatrix(TreeNode *node, int row, int l, int r, vector<vector<string>>& matrix)
+    {
+        if (!node)
+            return;
+
+        int mid = l + (r - l)/2;
+        matrix[row][mid] = to_string(node->val);
+        fillMatrix(node->left, row+1, l, mid-1, matrix);
+        fillMatrix(node->right, row+1, mid+1, r, matrix);
     }
 
     void printTree(TreeNode* root)
     {
-        
+        if (!root)
+            return;
+
+        int height = countTreeHeight(root);
+        int col_num = pow(2, height) - 1;
+
+        vector<vector<string>> matrix(height, vector<string>(col_num, "  "));
+
+        // renderMatrix(root, height-2, 0, col_num/2, matrix);
+        fillMatrix(root, 0, 0, col_num-1, matrix);
+
+        cout << "tree:" << endl;
+        for (auto row : matrix)
+        {
+            for (auto col : row)
+                cout << col;
+            cout << endl;
+        }
+        cout << endl;
     }
 };
 
