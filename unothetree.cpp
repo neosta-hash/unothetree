@@ -69,14 +69,12 @@ public:
 
     int countTreeHeight(TreeNode *node)
     {
-        if (node)
-        {
-            int lc = 1 + countTreeHeight(node->left);
-            int rc = 1 + countTreeHeight(node->right);
-            return max(lc, rc);
-        }
-
-        return 0;
+        if (!node)
+            return 0;
+        
+        int lc = 1 + countTreeHeight(node->left);
+        int rc = 1 + countTreeHeight(node->right);
+        return max(lc, rc);
     }
 
     void printNodesArray(vector<int>& nodes)
@@ -146,7 +144,114 @@ class Solution
 private:
     vector<int> m_order;
 public:
+    // 94. Binary Tree Inorder Traversal
+    void inorderTraversal_R(TreeNode* node)
+    {
+        if (!node)
+            return;
+        
+        inorderTraversal_R(node->left);
+        m_order.push_back(node->val);
+        inorderTraversal_R(node->right);
+    }
 
+    void inorderTraversal_NR(TreeNode* node)
+    {
+        if (!node)
+            return;
+
+        stack<TreeNode*> mid_nodes;
+        bool is_pop = false;
+
+        while (1)
+        {
+            if (!is_pop)
+            {
+                if (node->left)
+                {
+                    mid_nodes.push(node);
+                    node = node->left;
+                    continue;
+                }
+            }
+            
+            m_order.push_back(node->val);
+
+            if (node->right)
+            {
+                node = node->right;
+                is_pop = false;
+                continue;
+            }
+
+            if (mid_nodes.empty())
+                return;
+
+            node = mid_nodes.top();
+            mid_nodes.pop();
+            is_pop = true;
+        }
+    }
+
+    vector<int> inorderTraversal(TreeNode* root)
+	{
+        m_order.clear();
+
+        // inorderTraversal_R(root);
+        inorderTraversal_NR(root);
+
+        return m_order;
+    }
+
+
+    // 144. Binary Tree Preorder Traversal
+    void preorderTraversal_R(TreeNode* node)
+    {
+        if (!node)
+            return;
+
+        m_order.push_back(node->val);
+        preorderTraversal_R(node->left);
+        preorderTraversal_R(node->right);
+    }
+
+    void preorderTraversal_NR(TreeNode* node)
+    {
+        if (!node)
+            return;
+
+        stack<TreeNode*> right_nodes;
+
+        while (1)
+        {
+            m_order.push_back(node->val);
+
+            if (node->right)
+                right_nodes.push(node->right);
+
+            if (node->left)
+            {
+                node = node->left;
+                continue;
+            }
+
+            if (right_nodes.empty())
+                return;
+            
+            node = right_nodes.top();
+            right_nodes.pop();
+        }
+    }
+
+    vector<int> preorderTraversal(TreeNode* root)
+    {
+        m_order.clear();
+
+        // preorderTraversal_R(root);
+        preorderTraversal_NR(root);
+
+        return m_order;
+    }
 };
 
 int main()
@@ -170,22 +275,22 @@ int main()
     tree.printTree(root);
 
     // 94. Binary Tree Inorder Traversal
-    // vector<int> inorder = solu.inorderTraversal(pTreeRoot);
-    // cout << "non-recursive inorder traversal:";
+    // vector<int> inorder = solu.inorderTraversal(root);
+    // cout << "inorder traversal: ";
     // for (auto node : inorder)
     //     cout << node << ", ";
     // cout << endl;
 
     // 144. Binary Tree Preorder Traversal
-    // vector<int> preorder = solu.preorderTraversal(pTreeRoot);
-    // cout << "non-recursive preorder traversal:";
-    // for (auto node : preorder)
-    //     cout << node << ", ";
-    // cout << endl;
+    vector<int> preorder = solu.preorderTraversal(root);
+    cout << "preorder traversal: ";
+    for (auto node : preorder)
+        cout << node << ", ";
+    cout << endl;
 
     // 145. Binary Tree Postorder Traversal
     // vector<int> postorder = solu.postorderTraversal(pTreeRoot);
-    // cout << "non-recursive postorder traversal:";
+    // cout << "postorder traversal:";
     // for (auto node : postorder)
     //     cout << node << ", ";
     // cout << endl;
