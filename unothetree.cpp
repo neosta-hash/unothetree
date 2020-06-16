@@ -252,6 +252,44 @@ public:
 
         return m_order;
     }
+
+    // 145. Binary Tree Postorder Traversal
+    // todo
+
+    // 102. Binary Tree Level Order Traversal
+    vector<vector<int>> levelOrder(TreeNode* root)
+    {
+        vector<vector<int>> lo;
+
+        if (!root)
+            return lo;
+        
+        deque<TreeNode*> level_nodes;
+        int n = 1;
+        level_nodes.push_back(root);
+
+        while (n)
+        {
+            vector<int> level;
+
+            while (n--)
+            {
+                TreeNode* node = level_nodes.front();
+                level_nodes.pop_front();
+                level.push_back(node->val);
+
+                if (node->left)
+                    level_nodes.push_back(node->left);
+                if (node->right)
+                    level_nodes.push_back(node->right);
+            }
+
+            lo.push_back(level);
+            n = level_nodes.size();
+        }
+
+        return lo;
+    }
 };
 
 int main()
@@ -282,11 +320,11 @@ int main()
     // cout << endl;
 
     // 144. Binary Tree Preorder Traversal
-    vector<int> preorder = solu.preorderTraversal(root);
-    cout << "preorder traversal: ";
-    for (auto node : preorder)
-        cout << node << ", ";
-    cout << endl;
+    // vector<int> preorder = solu.preorderTraversal(root);
+    // cout << "preorder traversal: ";
+    // for (auto node : preorder)
+    //     cout << node << ", ";
+    // cout << endl;
 
     // 145. Binary Tree Postorder Traversal
     // vector<int> postorder = solu.postorderTraversal(pTreeRoot);
@@ -296,14 +334,14 @@ int main()
     // cout << endl;
 
     // 102. Binary Tree Level Order Traversal
-    // vector<vector<int>> levelOrder = solu.levelOrder(pTreeRoot);
-    // cout << "levelOrder:" << endl;
-    // for (auto level : levelOrder)
-    // {
-    //     for (auto node : level)
-    //     cout << node << " ";
-    //     cout << endl;
-    // }
+    vector<vector<int>> levelOrder = solu.levelOrder(root);
+    cout << "levelOrder: " << endl;
+    for (auto level : levelOrder)
+    {
+        for (auto node : level)
+            cout << node << " ";
+        cout << endl;
+    }
 
     // 107. Binary Tree Level Order Traversal II
     // vector<vector<int>> levelOrderBottom = solu.levelOrderBottom(pTreeRoot);
