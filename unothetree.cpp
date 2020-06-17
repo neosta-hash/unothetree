@@ -399,6 +399,51 @@ public:
         return isSymmetric_R(root->left, root->right);
         // return isSymmetric_NR(root);
     }
+
+    // 101. Symmetric Tree
+    int maxDepth(TreeNode* root)
+    {
+        if (!root)
+            return 0;
+
+        int ld = 1 + maxDepth(root->left);
+        int rd = 1 + maxDepth(root->right);
+
+        return max(ld, rd);
+    }
+
+    // 111. Minimum Depth of Binary Tree
+    int minDepth(TreeNode* root)
+    {
+        if (!root)
+            return 0;
+
+        int ld = 1 + minDepth(root->left);
+        int rd = 1 + minDepth(root->right);
+
+        if (!root->left)
+            return rd;
+        else if (!root->right)
+            return ld;
+
+        return min(ld, rd); 
+    }
+
+    // 110. Balanced Binary Tree
+    // todo: not optimal
+    bool isBalanced(TreeNode* root)
+    {
+        if (!root)
+            return true;
+        
+        int ld = 1 + maxDepth(root->left);
+        int rd = 1 + maxDepth(root->right);
+
+        if (abs(ld - rd) > 1)
+            return false;
+        
+        return isBalanced(root->left) && isBalanced(root->right);
+    }
 };
 
 int main()
@@ -410,6 +455,7 @@ int main()
     vector<int> nodes = { 56, 48, 59, 39, 52, 57, 69, 27, 44, 50, 54,
                             NULL, 58, 66, NULL, NULL, NULL, 40, NULL,
                             NULL, NULL, NULL, 55, NULL, NULL, NULL, 68, 38 };
+    nodes = { 1, 2, 2, 3, NULL, NULL, 3, 4, NULL, NULL, 4};
     // nodes = { 5, 3, 6, 2, 4, NULL,7, NULL, 1 };
     // nodes = { 8, 3, 5, NULL, 9, NULL, NULL, 9, 5 };
     // nodes = { 1, 2, 3, NULL, NULL, NULL, -10, 11, 20 };
@@ -463,16 +509,16 @@ int main()
     // }
 
     // 101. Symmetric Tree
-    cout << "isSymmetric: " << (solu.isSymmetric(root)? "true":"false") << endl;
+    // cout << "isSymmetric: " << (solu.isSymmetric(root)? "true":"false") << endl;
 
     // 104. Maximum Depth of Binary Tree
-    // cout << "max depth: " << solu.maxDepth(pTreeRoot) << endl;
+    // cout << "max depth: " << solu.maxDepth(root) << endl;
 
     // 111. Minimum Depth of Binary Tree
-    // cout << "min depth: " << solu.minDepth(pTreeRoot) << endl;
+    // cout << "min depth: " << solu.minDepth(root) << endl;
 
     // 110. Balanced Binary Tree
-    // cout << "isBalanced: " << (solu.isBalanced(pTreeRoot)? "true":"false") << endl;
+    cout << "isBalanced: " << (solu.isBalanced(root)? "true":"false") << endl;
 
     // 108. Convert Sorted Array to Binary Search Tree
     // vector<int> nums = {-10, -6, -4, -2, 0, 3, 4, 7 ,8};
