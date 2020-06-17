@@ -290,6 +290,115 @@ public:
 
         return lo;
     }
+
+    // 107. Binary Tree Level Order Traversal II
+    vector<vector<int>> levelOrderBottom(TreeNode* root)
+    {
+        vector<vector<int>> lob;
+
+        if (!root)
+            return lob;
+
+        deque<TreeNode*> level_nodes;
+        int n = 1;
+        level_nodes.push_back(root);
+
+        while (n)
+        {
+            vector<int> level;
+
+            while (n--)
+            {
+                TreeNode *node = level_nodes.front();
+                level_nodes.pop_front();
+
+                level.push_back(node->val);
+                if (node->left)
+                    level_nodes.push_back(node->left);
+                if (node->right)
+                    level_nodes.push_back(node->right);
+            }
+
+            lob.push_back(level);
+            n = level_nodes.size();
+        }
+        
+        n = lob.size();
+
+        for (int i = 0; i < n/2; i++)
+            swap(lob[i], lob[n-1-i]);
+
+        return lob;
+    }
+
+    // 101. Symmetric Tree
+    bool isSymmetric_R(TreeNode* lc, TreeNode* rc)
+    {
+        if (!lc || !rc)
+        {
+            if (lc == rc)
+                return true;
+            return false;
+        }
+
+        if (lc->val != rc->val)
+            return false;
+
+        return isSymmetric_R(lc->left, rc->right) && isSymmetric_R(lc->right, rc->left);
+    }
+
+    bool isSymmetric_NR(TreeNode* root)
+    {
+        if (!root)
+            return true;
+
+        deque<TreeNode*> level_nodes;
+        int n = 1;
+        level_nodes.push_back(root);
+
+        while (n)
+        {
+            vector<TreeNode*> nodes;
+
+            while (n--)
+            {
+                TreeNode *node = level_nodes.front();
+                level_nodes.pop_front();
+
+                if (node->left)
+                    level_nodes.push_back(node->left);
+                if (node->right)
+                    level_nodes.push_back(node->right);
+                nodes.push_back(node->left);
+                nodes.push_back(node->right);
+            }
+
+            n = nodes.size();
+
+            for (int i = 0; i < n/2; i++)
+            {
+                if (!nodes[i] && !nodes[n-1-i])
+                    continue;
+                else if ((nodes[i] && nodes[n-1-i]) && (nodes[i]->val == nodes[n-1-i]->val))
+                    continue;
+
+                return false;
+            }
+
+            n = level_nodes.size();
+        }
+        
+        return true;
+    }
+
+    bool isSymmetric(TreeNode* root)
+    {
+        if (!root)
+            return true;
+
+        return isSymmetric_R(root->left, root->right);
+        // return isSymmetric_NR(root);
+    }
 };
 
 int main()
@@ -327,25 +436,25 @@ int main()
     // cout << endl;
 
     // 145. Binary Tree Postorder Traversal
-    // vector<int> postorder = solu.postorderTraversal(pTreeRoot);
+    // vector<int> postorder = solu.postorderTraversal(root);
     // cout << "postorder traversal:";
     // for (auto node : postorder)
     //     cout << node << ", ";
     // cout << endl;
 
     // 102. Binary Tree Level Order Traversal
-    vector<vector<int>> levelOrder = solu.levelOrder(root);
-    cout << "levelOrder: " << endl;
-    for (auto level : levelOrder)
-    {
-        for (auto node : level)
-            cout << node << " ";
-        cout << endl;
-    }
+    // vector<vector<int>> levelOrder = solu.levelOrder(root);
+    // cout << "level order: " << endl;
+    // for (auto level : levelOrder)
+    // {
+    //     for (auto node : level)
+    //         cout << node << " ";
+    //     cout << endl;
+    // }
 
     // 107. Binary Tree Level Order Traversal II
-    // vector<vector<int>> levelOrderBottom = solu.levelOrderBottom(pTreeRoot);
-    // cout << "levelOrderBottom:" << endl;
+    // vector<vector<int>> levelOrderBottom = solu.levelOrderBottom(root);
+    // cout << "level order bottom: " << endl;
     // for (auto level : levelOrderBottom)
     // {
     //     for (auto node : level)
@@ -354,7 +463,7 @@ int main()
     // }
 
     // 101. Symmetric Tree
-    // cout << "isSymmetric: " << (solu.isSymmetric(pTreeRoot)? "true":"false") << endl;
+    cout << "isSymmetric: " << (solu.isSymmetric(root)? "true":"false") << endl;
 
     // 104. Maximum Depth of Binary Tree
     // cout << "max depth: " << solu.maxDepth(pTreeRoot) << endl;
