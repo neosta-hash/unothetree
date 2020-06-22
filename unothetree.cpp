@@ -254,7 +254,117 @@ public:
     }
 
     // 145. Binary Tree Postorder Traversal
-    // todo
+    void postorderTraversal_R(TreeNode *node)
+    {
+        if (!node)
+            return;
+        
+        postorderTraversal_R(node->left);
+        postorderTraversal_R(node->right);
+        m_order.push_back(node->val);
+    }
+
+    // void postorderTraversal_NR(TreeNode *node)
+    // {
+    //     if (!node)
+    //         return;
+        
+    //     stack<TreeNode*> mid_nodes;
+    //     stack<TreeNode*> right_traversed;
+    //     bool is_pop = false;
+
+    //     while (1)
+    //     {
+    //         if (is_pop)
+    //         {
+    //             is_pop = false;
+    //             if (!right_traversed.empty() && right_traversed.top() == node)
+    //                 right_traversed.pop();
+    //             else if (node->right)
+    //             {
+    //                 mid_nodes.push(node);
+    //                 right_traversed.push(node);
+    //                 node = node->right;
+    //                 continue;
+    //             }
+    //         }
+    //         else
+    //         {
+    //             if (node->left)
+    //             {
+    //                 mid_nodes.push(node);
+    //                 node = node->left;
+    //                 continue;
+    //             }
+    //             else if (node->right)
+    //             {
+    //                 mid_nodes.push(node);
+    //                 right_traversed.push(node);
+    //                 node = node->right;
+    //                 continue;
+    //             }
+    //         }
+
+    //         m_order.push_back(node->val);
+
+    //         if (mid_nodes.empty())
+    //             return;
+
+    //         node = mid_nodes.top();
+    //         mid_nodes.pop();
+    //         is_pop = true;
+    //     }
+    // }
+
+    void postorderTraversal_NR(TreeNode *node)
+    {
+        if (!node)
+            return;
+        
+        stack<TreeNode*> mid_nodes;
+        stack<TreeNode*> right_traversed;
+        bool is_pop = false;
+
+        while (1)
+        {
+            if (!is_pop && node->left)
+            {
+                mid_nodes.push(node);
+                node = node->left;
+                continue;
+            }
+
+            if (!right_traversed.empty() && right_traversed.top() == node)
+                    right_traversed.pop();
+            else if (node->right)
+            {
+                mid_nodes.push(node);
+                right_traversed.push(node);
+                node = node->right;
+                is_pop = false;
+                continue;
+            }
+
+            m_order.push_back(node->val);
+
+            if (mid_nodes.empty())
+                return;
+
+            node = mid_nodes.top();
+            mid_nodes.pop();
+            is_pop = true;
+        }
+    }
+
+    vector<int> postorderTraversal(TreeNode* root)
+    {
+        m_order.clear();
+
+        // postorderTraversal_R(root);
+        postorderTraversal_NR(root);
+
+        return m_order;
+    }
 
     // 102. Binary Tree Level Order Traversal
     vector<vector<int>> levelOrder(TreeNode* root)
@@ -444,6 +554,107 @@ public:
         
         return isBalanced(root->left) && isBalanced(root->right);
     }
+
+    // 108. Convert Sorted Array to Binary Search Tree
+    TreeNode* sortedArrayToBST(vector<int>& nums) 
+    {
+        int n = nums.size();
+
+        if (0 == n)
+            return nullptr;
+
+        int mid = (n-1) / 2;
+        TreeNode *node = new TreeNode(nums[mid]);
+        vector<int> ln(nums.begin(), nums.begin() + mid);
+        node->left = sortedArrayToBST(ln);
+        vector<int> rn(nums.begin() + mid + 1, nums.end());
+        node->right = sortedArrayToBST(rn);
+
+        return node;
+    }
+
+    // 99. Recover Binary Search Tree
+    // todo
+
+    // 98. Validate Binary Search Tree
+    // ls: left side not left subtree.  rs: right side not right subtree
+    bool isVBST(TreeNode* node, vector<int> &ls, vector<int> &rs)
+    {
+        if (!node)
+            return true;
+
+        int val = node->val;
+
+        for (auto lval : ls)
+            if (lval >= val)
+                return false;
+        
+        for (auto rval : rs)
+            if (rval <= val)
+                return false;
+
+        rs.push_back(val);
+        bool ret = isVBST(node->left, ls, rs);
+        rs.pop_back();
+        if (!ret)
+            return false;
+
+        ls.push_back(val);
+        ret = isVBST(node->right, ls, rs);
+        ls.pop_back();
+        
+        return ret;
+    }
+
+    bool isValidBST(TreeNode* root)
+    {
+        vector<int> ls, rs;
+
+        return isVBST(root, ls, rs);
+    }
+
+    // 103. Binary Tree Zigzag Level Order Traversal
+    // Easy mind using deque, traverse in level order, then reverse the correct levels.
+    // vector<vector<int>> zigzagLevelOrder(TreeNode* root)
+    // {
+    //     vector<vector<int>> zigzag_level;
+
+    //     if (!root)
+    //         return zigzag_level;
+
+    //     deque<TreeNode*> level_nodes;
+    //     int n = 1;
+    //     level_nodes.push_back(root);
+
+    //     while (n)
+    //     {
+    //         vector<int> level;
+            
+    //         while (n--)
+    //         {
+    //             TreeNode *node = level_nodes.front();
+    //             level_nodes.pop_front();
+    //             level.push_back(node->val);
+
+    //             if (node->left)
+    //                 level_nodes.push_back(node->left);
+    //             if (node->right)
+    //                 level_nodes.push_back(node->right);                    
+    //         }
+
+    //         if (zigzag_level.size() % 2)
+    //             reverse(level.begin(), level.end());
+    //         zigzag_level.push_back(level);
+    //         n = level_nodes.size();
+    //     }
+
+    //     return zigzag_level;
+    // }
+
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root)
+    {
+        
+    }
 };
 
 int main()
@@ -455,7 +666,7 @@ int main()
     vector<int> nodes = { 56, 48, 59, 39, 52, 57, 69, 27, 44, 50, 54,
                             NULL, 58, 66, NULL, NULL, NULL, 40, NULL,
                             NULL, NULL, NULL, 55, NULL, NULL, NULL, 68, 38 };
-    nodes = { 1, 2, 2, 3, NULL, NULL, 3, 4, NULL, NULL, 4};
+    // nodes = { 1, 2, 2, 3, NULL, NULL, 3, 4, NULL, NULL, 4};
     // nodes = { 5, 3, 6, 2, 4, NULL,7, NULL, 1 };
     // nodes = { 8, 3, 5, NULL, 9, NULL, NULL, 9, 5 };
     // nodes = { 1, 2, 3, NULL, NULL, NULL, -10, 11, 20 };
@@ -518,12 +729,12 @@ int main()
     // cout << "min depth: " << solu.minDepth(root) << endl;
 
     // 110. Balanced Binary Tree
-    cout << "isBalanced: " << (solu.isBalanced(root)? "true":"false") << endl;
+    // cout << "isBalanced: " << (solu.isBalanced(root)? "true":"false") << endl;
 
     // 108. Convert Sorted Array to Binary Search Tree
     // vector<int> nums = {-10, -6, -4, -2, 0, 3, 4, 7 ,8};
-    // pTreeRoot = solu.sortedArrayToBST(nums);
-    // tree.printTree(pTreeRoot);
+    // TreeNode* root = solu.sortedArrayToBST(nums);
+    // tree.printTree(root);
 
     // 99. Recover Binary Search Tree
     // solu.recoverTree(pTreeRoot);
@@ -531,17 +742,17 @@ int main()
     // tree.printTree(pTreeRoot);
 
     // 98. Validate Binary Search Tree
-    // cout << "isValidBST: " << (solu.isValidBST(pTreeRoot) ? "true" : "false") << endl;
+    // cout << "isValidBST: " << (solu.isValidBST(root) ? "true" : "false") << endl;
 
     // 103. Binary Tree Zigzag Level Order Traversal
-    // vector<vector<int>> zigzagLevelOrder = solu.zigzagLevelOrder(pTreeRoot);
-    // cout << "zigzagLevelOrder:" << endl;
-    // for (auto zigzagLevel : zigzagLevelOrder)
-    // {
-    //     for (auto node : zigzagLevel)
-    //         cout << node << " ";
-    //     cout << endl;
-    // }
+    vector<vector<int>> zigzagLevelOrder = solu.zigzagLevelOrder(root);
+    cout << "zigzagLevelOrder:" << endl;
+    for (auto zigzagLevel : zigzagLevelOrder)
+    {
+        for (auto node : zigzagLevel)
+            cout << node << " ";
+        cout << endl;
+    }
 
     // 100. Same Tree
     // TreeNode *pTreeRoot2 = tree.createTreeFromNodeSet();
