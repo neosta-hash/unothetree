@@ -588,7 +588,7 @@ public:
         for (auto lval : ls)
             if (lval >= val)
                 return false;
-        
+
         for (auto rval : rs)
             if (rval <= val)
                 return false;
@@ -617,10 +617,10 @@ public:
     // Easy mind using deque, traverse in level order, then reverse the correct levels.
     // vector<vector<int>> zigzagLevelOrder(TreeNode* root)
     // {
-    //     vector<vector<int>> zigzag_level;
+    //     vector<vector<int>> zigzag_order;
 
     //     if (!root)
-    //         return zigzag_level;
+    //         return zigzag_order;
 
     //     deque<TreeNode*> level_nodes;
     //     int n = 1;
@@ -642,18 +642,72 @@ public:
     //                 level_nodes.push_back(node->right);                    
     //         }
 
-    //         if (zigzag_level.size() % 2)
+    //         if (zigzag_order.size() % 2)
     //             reverse(level.begin(), level.end());
-    //         zigzag_level.push_back(level);
+    //         zigzag_order.push_back(level);
     //         n = level_nodes.size();
     //     }
 
-    //     return zigzag_level;
+    //     return zigzag_order;
     // }
 
+    // traverse with stack
     vector<vector<int>> zigzagLevelOrder(TreeNode* root)
     {
-        
+        vector<vector<int>> zigzag_order;
+
+        if (!root)
+            return zigzag_order;
+
+        stack<TreeNode*> crnt_ln;
+        stack<TreeNode*> next_ln;
+        crnt_ln.push(root);
+
+        while (crnt_ln.size())
+        {
+            vector<int> level;
+
+            while (crnt_ln.size())
+            {
+                TreeNode *node = crnt_ln.top();
+                crnt_ln.pop();
+                level.push_back(node->val);
+
+                if (zigzag_order.size() % 2)
+                {
+                    if (node->right)
+                        next_ln.push(node->right);
+                    if (node->left)
+                        next_ln.push(node->left);
+                }
+                else
+                {
+                    if (node->left)
+                        next_ln.push(node->left);
+                    if (node->right)
+                        next_ln.push(node->right);
+                }
+            }
+
+            zigzag_order.push_back(level);
+            swap(crnt_ln, next_ln);
+        }
+
+        return zigzag_order;
+    }
+
+    // 100. Same Tree
+    bool isSameTree(TreeNode* p, TreeNode* q)
+    {
+        if (!p && !q)
+            return true;
+        else if(!p || !q)
+            return false;
+
+        if (p->val != q->val)
+            return false;
+
+        return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);  
     }
 };
 
@@ -745,19 +799,24 @@ int main()
     // cout << "isValidBST: " << (solu.isValidBST(root) ? "true" : "false") << endl;
 
     // 103. Binary Tree Zigzag Level Order Traversal
-    vector<vector<int>> zigzagLevelOrder = solu.zigzagLevelOrder(root);
-    cout << "zigzagLevelOrder:" << endl;
-    for (auto zigzagLevel : zigzagLevelOrder)
-    {
-        for (auto node : zigzagLevel)
-            cout << node << " ";
-        cout << endl;
-    }
+    // vector<vector<int>> zigzagLevelOrder = solu.zigzagLevelOrder(root);
+    // cout << "zigzagLevelOrder:" << endl;
+    // for (auto zigzagLevel : zigzagLevelOrder)
+    // {
+    //     for (auto node : zigzagLevel)
+    //         cout << node << " ";
+    //     cout << endl;
+    // }
 
     // 100. Same Tree
-    // TreeNode *pTreeRoot2 = tree.createTreeFromNodeSet();
-    // tree.printTree(pTreeRoot2);
-    // cout << "isSameTree: " << (solu.isSameTree(pTreeRoot, pTreeRoot2) ? "true" : "false") << endl;
+    vector<int> nodes2 = { 56, 48, 59, 39, 52, 57, 69, 27, 44, 50, 54,
+                            NULL, 58, 66, NULL, NULL, NULL, 40, NULL,
+                            NULL, NULL, NULL, 55, NULL, NULL, NULL, 68, 38 };
+    // nodes2 = { 56, 48, 59, 39, 52, 57, 69, 27, 44, 50, 54,
+    //                         NULL, 58, 66, NULL, NULL, NULL, 40, NULL,
+    //                         NULL, NULL, NULL, 55, NULL, NULL, NULL, 68, 35 };
+    TreeNode *root2 = tree.createTreeFromArray(nodes2);
+    cout << "isSameTree: " << (solu.isSameTree(root, root2) ? "true" : "false") << endl;
     
     // 112. Path Sum 
     // cout << "hasPathSum: " << (solu.hasPathSum(pTreeRoot, 230) ? "true" : "false") << endl;
