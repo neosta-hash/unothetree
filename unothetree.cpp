@@ -709,6 +709,27 @@ public:
 
         return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);  
     }
+
+    // 112. Path Sum 
+    bool hasPathSum(TreeNode* root, int sum)
+    {
+        if (!root)
+            return false;
+        
+        sum -= root->val;
+        if (!sum && !root->left && !root->right)
+            return true;
+
+        return hasPathSum(root->left, sum) || hasPathSum(root->right, sum);
+    }
+
+    // 113. Path Sum II
+    vector<vector<int>> pathSum(TreeNode* root, int sum)
+    {
+        vector<vector<int>> v;
+
+        return v;
+    }
 };
 
 int main()
@@ -728,6 +749,7 @@ int main()
     // nodes = { 9, 6, -3, NULL, NULL, -6, 2, NULL, NULL, 2, NULL, -6, -6, -6 };
     // nodes = { 5, 4, 8, 11, NULL, 13, 4, 7, 2, NULL, NULL, NULL, 1 };
     // nodes = { 3, 4, 6, NULL, NULL, 7, 9, 11, NULL, NULL, 13 };
+    nodes = {1};
     tree.printNodesArray(nodes);
     TreeNode* root = tree.createTreeFromArray(nodes);
     tree.printTree(root);
@@ -809,27 +831,27 @@ int main()
     // }
 
     // 100. Same Tree
-    vector<int> nodes2 = { 56, 48, 59, 39, 52, 57, 69, 27, 44, 50, 54,
-                            NULL, 58, 66, NULL, NULL, NULL, 40, NULL,
-                            NULL, NULL, NULL, 55, NULL, NULL, NULL, 68, 38 };
-    // nodes2 = { 56, 48, 59, 39, 52, 57, 69, 27, 44, 50, 54,
+    // vector<int> nodes2 = { 56, 48, 59, 39, 52, 57, 69, 27, 44, 50, 54,
     //                         NULL, 58, 66, NULL, NULL, NULL, 40, NULL,
-    //                         NULL, NULL, NULL, 55, NULL, NULL, NULL, 68, 35 };
-    TreeNode *root2 = tree.createTreeFromArray(nodes2);
-    cout << "isSameTree: " << (solu.isSameTree(root, root2) ? "true" : "false") << endl;
+    //                         NULL, NULL, NULL, 55, NULL, NULL, NULL, 68, 38 };
+    // // nodes2 = { 56, 48, 59, 39, 52, 57, 69, 27, 44, 50, 54,
+    // //                         NULL, 58, 66, NULL, NULL, NULL, 40, NULL,
+    // //                         NULL, NULL, NULL, 55, NULL, NULL, NULL, 68, 35 };
+    // TreeNode *root2 = tree.createTreeFromArray(nodes2);
+    // cout << "isSameTree: " << (solu.isSameTree(root, root2) ? "true" : "false") << endl;
     
-    // 112. Path Sum 
-    // cout << "hasPathSum: " << (solu.hasPathSum(pTreeRoot, 230) ? "true" : "false") << endl;
+    // 112. Path Sum
+    // cout << "hasPathSum: " << (solu.hasPathSum(root, 0) ? "true" : "false") << endl;
 
     // 113. Path Sum II
-    // vector<vector<int>> paths = solu.pathSum(pTreeRoot, 230);
-    // cout << "paths where each equals to the pathsum:" << endl;
-    // for (auto path : paths)
-    // {
-    //     for (auto node : path)
-    //         cout << node << " ";
-    //     cout << endl;
-    // }
+    vector<vector<int>> paths = solu.pathSum(root, 230);
+    cout << "paths where each equals to the pathsum:" << endl;
+    for (auto path : paths)
+    {
+        for (auto node : path)
+            cout << node << " ";
+        cout << endl;
+    }
 
     // 450. Delete Node in a BST
     // int key = 5;
