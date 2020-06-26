@@ -724,11 +724,89 @@ public:
     }
 
     // 113. Path Sum II
+    void findPathForSum(TreeNode* node, int &sum, vector<int> &path, vector<vector<int>>& paths)
+    {
+        if (!node)
+            return;
+        
+        sum -= node->val;
+        path.push_back(node->val);
+
+        if (!sum && !node->left && !node->right)
+        {
+            paths.push_back(path);
+            path.pop_back();
+            sum += node->val;
+            return;
+        }
+        
+        findPathForSum(node->left, sum, path, paths);
+        findPathForSum(node->right, sum, path, paths);
+        path.pop_back();
+        sum += node->val;
+    }
+
     vector<vector<int>> pathSum(TreeNode* root, int sum)
     {
-        vector<vector<int>> v;
+        vector<vector<int>> paths;
 
-        return v;
+        if (!root)
+            return paths; 
+
+        vector<int> path;
+        findPathForSum(root, sum, path, paths);
+
+        return paths;
+    }
+
+    // 450. Delete Node in a BST
+    TreeNode** findNodeToDelete(TreeNode **nnode, int &key)
+    {
+        if (!*nnode || key == (*nnode)->val)
+            return nnode;
+
+        if (key < (*nnode)->val)
+            return findNodeToDelete(&(*nnode)->left, key);
+        else
+            return findNodeToDelete(&(*nnode)->right, key);
+    }
+
+    TreeNode* deleteNode(TreeNode* root, int key)
+    {
+        TreeNode **nnode = findNodeToDelete(&root, key);
+        
+        if (!*nnode)
+            return root;
+        
+        if (!(*nnode)->left && !(*nnode)->right)
+            *nnode = nullptr;
+        else if (!(*nnode)->left)
+            *nnode = (*nnode)->right;
+        else if (!(*nnode)->right)
+            *nnode = (*nnode)->left;
+        else
+        {
+            TreeNode *pnode = *nnode;
+            TreeNode *rml_node = pnode->right;
+            while (rml_node->left)
+            {
+                pnode = rml_node;
+                rml_node = rml_node->left;
+            }
+            (*nnode)->val = rml_node->val;
+            if (pnode == *nnode)
+                pnode->right = rml_node->right;
+            else
+                pnode->left = rml_node->right;
+        }
+
+        return root;
+    }
+
+    // 617. Merge Two Binary Trees
+    TreeNode* mergeTrees(TreeNode* t1, TreeNode* t2)
+    {
+        
     }
 };
 
@@ -749,7 +827,7 @@ int main()
     // nodes = { 9, 6, -3, NULL, NULL, -6, 2, NULL, NULL, 2, NULL, -6, -6, -6 };
     // nodes = { 5, 4, 8, 11, NULL, 13, 4, 7, 2, NULL, NULL, NULL, 1 };
     // nodes = { 3, 4, 6, NULL, NULL, 7, 9, 11, NULL, NULL, 13 };
-    nodes = {1};
+    // nodes = { 1 };
     tree.printNodesArray(nodes);
     TreeNode* root = tree.createTreeFromArray(nodes);
     tree.printTree(root);
@@ -844,24 +922,27 @@ int main()
     // cout << "hasPathSum: " << (solu.hasPathSum(root, 0) ? "true" : "false") << endl;
 
     // 113. Path Sum II
-    vector<vector<int>> paths = solu.pathSum(root, 230);
-    cout << "paths where each equals to the pathsum:" << endl;
-    for (auto path : paths)
-    {
-        for (auto node : path)
-            cout << node << " ";
-        cout << endl;
-    }
+    // int sum;
+    // cin >> sum;
+    // vector<vector<int>> paths = solu.pathSum(root, sum);
+    // cout << "paths where equals to the sum: " << sum << endl;
+    // for (auto path : paths)
+    // {
+    //     for (auto node : path)
+    //         cout << node << " ";
+    //     cout << endl;
+    // }
 
     // 450. Delete Node in a BST
-    // int key = 5;
+    // int key;
+    // cin >> key;
     // cout << "delete node: " << key << endl;
-    // solu.deleteNode(pTreeRoot2, key);
-    // tree.printTree(pTreeRoot2);
+    // solu.deleteNode(root, key);
+    // tree.printTree(root);
 
     // 617. Merge Two Binary Trees
-    // solu.mergeTrees(pTreeRoot, pTreeRoot2);
-    // tree.printTree(pTreeRoot);
+    solu.mergeTrees(pTreeRoot, pTreeRoot2);
+    tree.printTree(pTreeRoot);
 
     // 114. Flatten Binary Tree to Linked List
     // solu.flatten(pTreeRoot2);
