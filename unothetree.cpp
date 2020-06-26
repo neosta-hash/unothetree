@@ -806,7 +806,16 @@ public:
     // 617. Merge Two Binary Trees
     TreeNode* mergeTrees(TreeNode* t1, TreeNode* t2)
     {
+        if (!t1)
+            return t2;
+        if (!t2)
+            return t1;
         
+        t1->left = mergeTrees(t1->left, t2->left);
+        t1->right = mergeTrees(t1->right, t2->right);
+
+        t1->val += t2->val;
+        return t1;
     }
 };
 
@@ -941,8 +950,13 @@ int main()
     // tree.printTree(root);
 
     // 617. Merge Two Binary Trees
-    solu.mergeTrees(pTreeRoot, pTreeRoot2);
-    tree.printTree(pTreeRoot);
+    vector<int> nodes2 = { 56, 48, 59, 39, 52, 57, 69, 27, 44, 50, 54,
+                            NULL, 58, 66, NULL, NULL, NULL, 40, NULL,
+                            NULL, NULL, NULL, 55, NULL, NULL, NULL, 68, 38 };
+    TreeNode *root2 = tree.createTreeFromArray(nodes2);
+    tree.printTree(root2);
+    solu.mergeTrees(root, root2);
+    tree.printTree(root);
 
     // 114. Flatten Binary Tree to Linked List
     // solu.flatten(pTreeRoot2);
