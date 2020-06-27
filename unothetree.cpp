@@ -817,6 +817,71 @@ public:
         t1->val += t2->val;
         return t1;
     }
+
+    // 114. Flatten Binary Tree to Linked List
+    // key: pre-order
+    void flatten(TreeNode* root)
+    {
+        if (!root)
+            return;
+        
+        stack<TreeNode*> rcs;
+        TreeNode *node = root, *pnode = nullptr;
+
+        while (1)
+        {
+            if (pnode)
+            {
+                pnode->left = nullptr;
+                pnode->right = node;
+            }
+
+            pnode = node;
+
+            if (node->right)
+                rcs.push(node->right);
+
+            if (node->left)
+            {
+                node = node->left;
+                continue;
+            }
+
+            if (rcs.empty())
+                return;
+
+            node = rcs.top();
+            rcs.pop();
+        }
+
+        return;
+    }
+
+    // 129. Sum Root to Leaf Numbers
+    void sumAllPaths(TreeNode* node, int ps, int &sum)
+    {
+        if (!node)
+            return;
+
+        ps = ps*10 + node->val;
+
+        if (!node->left && !node->right)
+        {
+            sum += ps;
+            return;
+        }
+
+        sumAllPaths(node->left, ps, sum);
+        sumAllPaths(node->right, ps, sum);
+    }
+
+    int sumNumbers(TreeNode* root)
+    {
+        int sum = 0;
+        sumAllPaths(root, 0, sum);
+
+        return sum;
+    }
 };
 
 int main()
@@ -837,6 +902,7 @@ int main()
     // nodes = { 5, 4, 8, 11, NULL, 13, 4, 7, 2, NULL, NULL, NULL, 1 };
     // nodes = { 3, 4, 6, NULL, NULL, 7, 9, 11, NULL, NULL, 13 };
     // nodes = { 1 };
+    nodes = { 1, 2, 5, 3, 4, NULL, 6};
     tree.printNodesArray(nodes);
     TreeNode* root = tree.createTreeFromArray(nodes);
     tree.printTree(root);
@@ -950,21 +1016,21 @@ int main()
     // tree.printTree(root);
 
     // 617. Merge Two Binary Trees
-    vector<int> nodes2 = { 56, 48, 59, 39, 52, 57, 69, 27, 44, 50, 54,
-                            NULL, 58, 66, NULL, NULL, NULL, 40, NULL,
-                            NULL, NULL, NULL, 55, NULL, NULL, NULL, 68, 38 };
-    TreeNode *root2 = tree.createTreeFromArray(nodes2);
-    tree.printTree(root2);
-    solu.mergeTrees(root, root2);
-    tree.printTree(root);
+    // vector<int> nodes2 = { 56, 48, 59, 39, 52, 57, 69, 27, 44, 50, 54,
+    //                         NULL, 58, 66, NULL, NULL, NULL, 40, NULL,
+    //                         NULL, NULL, NULL, 55, NULL, NULL, NULL, 68, 38 };
+    // TreeNode *root2 = tree.createTreeFromArray(nodes2);
+    // tree.printTree(root2);
+    // solu.mergeTrees(root, root2);
+    // tree.printTree(root);
 
     // 114. Flatten Binary Tree to Linked List
-    // solu.flatten(pTreeRoot2);
+    // solu.flatten(root);
     // cout << "flatten tree:" << endl;
-    // tree.printTree(pTreeRoot2);
+    // tree.printTree(root);
     
     // 129. Sum Root to Leaf Numbers
-    // cout<< "Sum Root to Leaf Numbers: " << solu.sumNumbers(pTreeRoot2) << endl;
+    cout<< "Sum Root to Leaf Numbers: " << solu.sumNumbers(root) << endl;
 
     // 173. Binary Search Tree Iterator
     // BSTIterator* treeIterator = new BSTIterator(pTreeRoot2);
