@@ -574,7 +574,63 @@ public:
     }
 
     // 99. Recover Binary Search Tree
-    // todo
+    vector<int> levelOrderTraverse(TreeNode* root)
+    {
+        vector<int> level_order;
+
+        queue<TreeNode*> level_nodes;
+        level_nodes.push(root);
+
+        while (!level_nodes.empty())
+        {
+            int n = level_nodes.size();
+
+            while (n--)
+            {
+                TreeNode *node = level_nodes.front();
+                level_nodes.pop();
+                level_order.push_back(node->val);
+
+                if (node->left)
+                    level_nodes.push(node->left);
+                if (node->right)
+                    level_nodes.push(node->right);
+            }
+        }
+
+        return level_order;
+    }
+
+    int countNodes(TreeNode* node)
+    {
+        if (!node)
+            return 0;
+        
+        return 1 + countNodes(node->left) + countNodes(node->right);
+    }
+
+    void locateNode(vector<int>& nodes, int ls, TreeNode* node)
+    {
+        if (!node)
+            return;
+
+        int idx = ls + countNodes(node->left);
+        node->val = nodes[idx];
+
+        locateNode(nodes, ls, node->left);
+        locateNode(nodes, idx+1, node->right);
+    }
+
+    void recoverTree(TreeNode* root)
+    {
+        if (!root)
+            return;
+
+        vector<int> nodes = levelOrderTraverse(root);
+        sort(nodes.begin(), nodes.end());
+
+        locateNode(nodes, 0, root);
+    }
 
     // 98. Validate Binary Search Tree
     // ls: left side not left subtree.  rs: right side not right subtree
@@ -966,9 +1022,9 @@ int main()
     // tree.printTree(root);
 
     // 99. Recover Binary Search Tree
-    // solu.recoverTree(pTreeRoot);
-    // cout << "Recover Binary Search Tree:" << endl;
-    // tree.printTree(pTreeRoot);
+    solu.recoverTree(root);
+    cout << "Recover Binary Search Tree:" << endl;
+    tree.printTree(root);
 
     // 98. Validate Binary Search Tree
     // cout << "isValidBST: " << (solu.isValidBST(root) ? "true" : "false") << endl;
@@ -1030,7 +1086,7 @@ int main()
     // tree.printTree(root);
     
     // 129. Sum Root to Leaf Numbers
-    cout<< "Sum Root to Leaf Numbers: " << solu.sumNumbers(root) << endl;
+    // cout<< "Sum Root to Leaf Numbers: " << solu.sumNumbers(root) << endl;
 
     // 173. Binary Search Tree Iterator
     // BSTIterator* treeIterator = new BSTIterator(pTreeRoot2);
