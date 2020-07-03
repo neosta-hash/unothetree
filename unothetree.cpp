@@ -938,6 +938,26 @@ public:
 
         return sum;
     }
+
+    
+};
+
+// 173. Binary Search Tree Iterator
+class BSTIterator {
+public:
+    BSTIterator(TreeNode* root) {
+        
+    }
+    
+    /** @return the next smallest number */
+    int next() {
+        
+    }
+    
+    /** @return whether we have a next smallest number */
+    bool hasNext() {
+        
+    }
 };
 
 int main()
@@ -1022,9 +1042,9 @@ int main()
     // tree.printTree(root);
 
     // 99. Recover Binary Search Tree
-    solu.recoverTree(root);
-    cout << "Recover Binary Search Tree:" << endl;
-    tree.printTree(root);
+    // solu.recoverTree(root);
+    // cout << "Recover Binary Search Tree:" << endl;
+    // tree.printTree(root);
 
     // 98. Validate Binary Search Tree
     // cout << "isValidBST: " << (solu.isValidBST(root) ? "true" : "false") << endl;
@@ -1089,22 +1109,22 @@ int main()
     // cout<< "Sum Root to Leaf Numbers: " << solu.sumNumbers(root) << endl;
 
     // 173. Binary Search Tree Iterator
-    // BSTIterator* treeIterator = new BSTIterator(pTreeRoot2);
-    // int i = 0;
-    // while (i < 25)
-    // {
-    //     cout << "hasNext(): ";
-    //     if (treeIterator->hasNext())
-    //     {
-    //         cout << "true" << endl;
-    //         cout << treeIterator->next() << endl;
-    //     }
-    //     else
-    //         cout << "false" << endl;
-    //     i++;
-    // }
-    // cout << treeIterator->next() << endl;
-    // cout << "hasNext(): " << (treeIterator->hasNext()?"true":"false") << endl;
+    BSTIterator* treeIterator = new BSTIterator(pTreeRoot2);
+    int i = 0;
+    while (i < 25)
+    {
+        cout << "hasNext(): ";
+        if (treeIterator->hasNext())
+        {
+            cout << "true" << endl;
+            cout << treeIterator->next() << endl;
+        }
+        else
+            cout << "false" << endl;
+        i++;
+    }
+    cout << treeIterator->next() << endl;
+    cout << "hasNext(): " << (treeIterator->hasNext()?"true":"false") << endl;
 
     // 199. Binary Tree Right Side View
     // vector<int> rightSideView = solu.rightSideView(pTreeRoot2);
