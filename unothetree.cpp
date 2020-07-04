@@ -960,6 +960,47 @@ public:
 
         return rsv;
     }
+
+    // 226. Invert Binary Tree
+    TreeNode* invertTree(TreeNode* root)
+    {
+        if (!root)
+            return root;
+
+        swap(root->left, root->right);
+        invertTree(root->left);
+        invertTree(root->right);
+
+        return root;
+    }
+
+    // 124. Binary Tree Maximum Path Sum
+    int findMaxPathSum(TreeNode* node, int &max_sum)
+    {
+        if (!node)
+            return 0;
+
+        int ls = findMaxPathSum(node->left, max_sum);
+        int rs = findMaxPathSum(node->right, max_sum);
+
+        int sum = max(node->val, node->val + max(ls, rs));
+        max_sum = max(max_sum, sum);
+        max_sum = max(max_sum, node->val + ls + rs);
+
+        return sum;
+    }
+
+    int maxPathSum(TreeNode* root)
+    {
+        int max_sum = INT_MIN;
+
+        findMaxPathSum(root, max_sum);
+        
+        return max_sum;
+    }
+
+    // 105. Construct Binary Tree from Preorder and Inorder Traversal
+    
 };
 
 // 173. Binary Search Tree Iterator
@@ -1018,9 +1059,9 @@ int main()
     // nodes = { 3, 4, 6, NULL, NULL, 7, 9, 11, NULL, NULL, 13 };
     // nodes = { 1 };
     // nodes = { 1, 2, 5, 3, 4, NULL, 6};
-    tree.printNodesArray(nodes);
-    TreeNode* root = tree.createTreeFromArray(nodes);
-    tree.printTree(root);
+    // tree.printNodesArray(nodes);
+    // TreeNode* root = tree.createTreeFromArray(nodes);
+    // tree.printTree(root);
 
     // 94. Binary Tree Inorder Traversal
     // vector<int> inorder = solu.inorderTraversal(root);
@@ -1164,27 +1205,27 @@ int main()
     // }
 
     // 199. Binary Tree Right Side View
-    vector<int> rightSideView = solu.rightSideView(root);
-    cout << "right side view: ["; 
-    for (auto node : rightSideView)
-        cout << node << " ";
-    cout << "]" << endl;
+    // vector<int> rightSideView = solu.rightSideView(root);
+    // cout << "right side view: ["; 
+    // for (auto node : rightSideView)
+    //     cout << node << " ";
+    // cout << "]" << endl;
 
     // 226. Invert Binary Tree
-    // solu.invertTree(pTreeRoot2);
+    // solu.invertTree(root);
     // cout << "invert tree:" << endl;
-    // tree.printTree(pTreeRoot2);
+    // tree.printTree(root);
 
     // 124. Binary Tree Maximum Path Sum
-    // cout << "Maximum Path Sum: " << solu.maxPathSum(pTreeRoot2) << endl;
+    // cout << "Maximum Path Sum: " << solu.maxPathSum(root) << endl;
 
-    // vector<int> preorderee = { 56, 48, 33, 27, 36, 34, 52, 50, 54, 55, 59, 57, 58, 69, 66, 68 };
-    // vector<int> inorderee = { 27, 33, 34, 36, 48, 50, 52, 54, 55, 56, 57, 58, 59, 66, 68, 69 };
-    // vector<int> postorderee = { 27, 34, 36, 33, 50, 55, 54, 52, 48, 58, 57, 68, 66, 69, 59, 56 };
+    vector<int> preorderee = { 56, 48, 33, 27, 36, 34, 52, 50, 54, 55, 59, 57, 58, 69, 66, 68 };
+    vector<int> inorderee = { 27, 33, 34, 36, 48, 50, 52, 54, 55, 56, 57, 58, 59, 66, 68, 69 };
+    vector<int> postorderee = { 27, 34, 36, 33, 50, 55, 54, 52, 48, 58, 57, 68, 66, 69, 59, 56 };
 
     // 105. Construct Binary Tree from Preorder and Inorder Traversal
-    // pTreeRoot2 = solu.buildTreeFromPreInOrder(preorderee, inorderee);
-    // tree.printTree(pTreeRoot2);
+    TreeNode *root = solu.buildTreeFromPreInOrder(preorderee, inorderee);
+    tree.printTree(root);
     
     // 106. Construct Binary Tree from Inorder and Postorder Traversal
     // pTreeRoot2 = solu.buildTreeFromInPostOrder(inorderee, postorderee);
