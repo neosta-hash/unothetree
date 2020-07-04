@@ -939,24 +939,63 @@ public:
         return sum;
     }
 
+    // 199. Binary Tree Right Side View
+    void rightSideTraverse(TreeNode* node, vector<int> &rsv, int level)
+    {
+        if (!node)
+            return;
     
+        if (rsv.size() == level)
+            rsv.push_back(node->val);
+
+        rightSideTraverse(node->right, rsv, level+1);
+        rightSideTraverse(node->left, rsv, level+1);
+    } 
+
+    vector<int> rightSideView(TreeNode* root)
+    {
+        vector<int> rsv;
+
+        rightSideTraverse(root, rsv, 0);
+
+        return rsv;
+    }
 };
 
 // 173. Binary Search Tree Iterator
+// todo: not optimal?
 class BSTIterator {
 public:
+    stack<TreeNode*> m_nodes;
+
+    void traverse(TreeNode* node) {
+        if (!node)
+            return;
+
+        m_nodes.push(node);
+        traverse(node->left);
+    }
+
     BSTIterator(TreeNode* root) {
+        if (!root)
+            return;
         
+        traverse(root);
     }
     
     /** @return the next smallest number */
     int next() {
+        TreeNode *node = m_nodes.top();
+        m_nodes.pop();
+
+        traverse(node->right);
         
+        return node->val;
     }
     
     /** @return whether we have a next smallest number */
     bool hasNext() {
-        
+        return !m_nodes.empty();
     }
 };
 
@@ -978,7 +1017,7 @@ int main()
     // nodes = { 5, 4, 8, 11, NULL, 13, 4, 7, 2, NULL, NULL, NULL, 1 };
     // nodes = { 3, 4, 6, NULL, NULL, 7, 9, 11, NULL, NULL, 13 };
     // nodes = { 1 };
-    nodes = { 1, 2, 5, 3, 4, NULL, 6};
+    // nodes = { 1, 2, 5, 3, 4, NULL, 6};
     tree.printNodesArray(nodes);
     TreeNode* root = tree.createTreeFromArray(nodes);
     tree.printTree(root);
@@ -1109,29 +1148,27 @@ int main()
     // cout<< "Sum Root to Leaf Numbers: " << solu.sumNumbers(root) << endl;
 
     // 173. Binary Search Tree Iterator
-    BSTIterator* treeIterator = new BSTIterator(pTreeRoot2);
-    int i = 0;
-    while (i < 25)
-    {
-        cout << "hasNext(): ";
-        if (treeIterator->hasNext())
-        {
-            cout << "true" << endl;
-            cout << treeIterator->next() << endl;
-        }
-        else
-            cout << "false" << endl;
-        i++;
-    }
-    cout << treeIterator->next() << endl;
-    cout << "hasNext(): " << (treeIterator->hasNext()?"true":"false") << endl;
+    // BSTIterator* treeIterator = new BSTIterator(root);
+    // int num_nodes = solu.countNodes(root);
+
+    // while (num_nodes--)
+    // {
+    //     cout << "hasNext(): ";
+    //     if (treeIterator->hasNext())
+    //     {
+    //         cout << "true" << endl;
+    //         cout << treeIterator->next() << endl;
+    //     }
+    //     else
+    //         cout << "false" << endl;
+    // }
 
     // 199. Binary Tree Right Side View
-    // vector<int> rightSideView = solu.rightSideView(pTreeRoot2);
-    // cout << "right side view: ["; 
-    // for (auto node : rightSideView)
-    //     cout << node << " ";
-    // cout << "]" << endl;
+    vector<int> rightSideView = solu.rightSideView(root);
+    cout << "right side view: ["; 
+    for (auto node : rightSideView)
+        cout << node << " ";
+    cout << "]" << endl;
 
     // 226. Invert Binary Tree
     // solu.invertTree(pTreeRoot2);
