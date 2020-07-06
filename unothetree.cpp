@@ -1000,7 +1000,10 @@ public:
     }
 
     // 105. Construct Binary Tree from Preorder and Inorder Traversal
-    
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder)
+    {
+            
+    }
 };
 
 // 173. Binary Search Tree Iterator
@@ -1219,21 +1222,23 @@ int main()
     // 124. Binary Tree Maximum Path Sum
     // cout << "Maximum Path Sum: " << solu.maxPathSum(root) << endl;
 
+    // 105. Construct Binary Tree from Preorder and Inorder Traversal
     vector<int> preorderee = { 56, 48, 33, 27, 36, 34, 52, 50, 54, 55, 59, 57, 58, 69, 66, 68 };
     vector<int> inorderee = { 27, 33, 34, 36, 48, 50, 52, 54, 55, 56, 57, 58, 59, 66, 68, 69 };
-    vector<int> postorderee = { 27, 34, 36, 33, 50, 55, 54, 52, 48, 58, 57, 68, 66, 69, 59, 56 };
-
-    // 105. Construct Binary Tree from Preorder and Inorder Traversal
     TreeNode *root = solu.buildTreeFromPreInOrder(preorderee, inorderee);
     tree.printTree(root);
     
     // 106. Construct Binary Tree from Inorder and Postorder Traversal
-    // pTreeRoot2 = solu.buildTreeFromInPostOrder(inorderee, postorderee);
-    // tree.printTree(pTreeRoot2);
+    // vector<int> inorderee = { 27, 33, 34, 36, 48, 50, 52, 54, 55, 56, 57, 58, 59, 66, 68, 69 };
+    // vector<int> postorderee = { 27, 34, 36, 33, 50, 55, 54, 52, 48, 58, 57, 68, 66, 69, 59, 56 };
+    // TreeNode *root = solu.buildTreeFromInPostOrder(inorderee, postorderee);
+    // tree.printTree(root);
 
     // 889. Construct Binary Tree from Preorder and Postorder Traversal
-    // pTreeRoot2 = solu.constructFromPrePost(preorderee, postorderee);
-    // tree.printTree(pTreeRoot2);
+    // vector<int> preorderee = { 56, 48, 33, 27, 36, 34, 52, 50, 54, 55, 59, 57, 58, 69, 66, 68 };
+    // vector<int> postorderee = { 27, 34, 36, 33, 50, 55, 54, 52, 48, 58, 57, 68, 66, 69, 59, 56 };
+    // TreeNode *root = solu.constructFromPrePost(preorderee, postorderee);
+    // tree.printTree(root);
 
     DOCK();
 
