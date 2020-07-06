@@ -7,7 +7,7 @@
 #include <math.h>
 #include <string>
 #include <algorithm>
-#include <map>
+#include <unordered_map>
 
 using namespace std;
 
@@ -1000,9 +1000,111 @@ public:
     }
 
     // 105. Construct Binary Tree from Preorder and Inorder Traversal
-    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder)
+    TreeNode* buildTreeFromPreInOrder(vector<int>& preorder, vector<int>& inorder)
     {
-            
+        TreeNode *root = nullptr;
+        vector<TreeNode*> nodes;
+        unordered_map<int, int> inorder_map; // <node_val, index in inorder>
+
+        for (int i = 0; i < inorder.size(); ++i)
+            inorder_map.insert({inorder[i], i});
+
+        for (int i = 0; i < preorder.size(); ++i)
+        {
+            TreeNode *node = new TreeNode(preorder[i]);
+
+            if (nodes.empty())
+            {
+                root = node;
+                nodes.push_back(node);
+                continue;
+            }
+
+            auto parent = nodes.end() - 1;
+
+            if (inorder_map[node->val] < inorder_map[(*parent)->val])
+            {
+                (*parent)->left = node;
+                nodes.push_back(node);
+                continue;
+            }
+
+            int min_offset = INT_MAX;
+
+            for (auto it = nodes.end() - 1; it >= nodes.begin(); --it)
+            {
+                int offset = inorder_map[node->val] - inorder_map[(*it)->val];
+                
+                if (offset > 0 && offset < min_offset)
+                {
+                    parent = it;
+                    if (1 == offset)
+                        break;
+                    min_offset = offset;
+                }
+            }
+
+            (*parent)->right = node;
+            if ((*parent)->left)
+                nodes.erase(parent);
+            nodes.push_back(node); // must after earse, since push_back() will alter the iterator "parent".
+        }
+
+        return root;
+    }
+
+    // 106. Construct Binary Tree from Inorder and Postorder Traversal
+    TreeNode* buildTreeFromInPostOrder(vector<int>& inorder, vector<int>& postorder)
+    {
+        TreeNode *root = nullptr;
+        vector<TreeNode*> nodes;
+        unordered_map<int, int> inorder_map;
+
+        for (int i = 0; i < inorder.size(); ++i)
+            inorder_map.insert({inorder[i], i});
+
+        for (int i = postorder.size() - 1; i >= 0; --i)
+        {
+            TreeNode *node = new TreeNode(postorder[i]);
+
+            if (nodes.empty())
+            {
+                root= node;
+                nodes.push_back(node);
+                continue;
+            }
+
+            auto parent = nodes.end() - 1;
+
+            if (inorder_map[node->val] > inorder_map[(*parent)->val])
+            {
+                (*parent)->right = node;
+                nodes.push_back(node);
+                continue;
+            }
+
+            int min_offset = INT_MAX;
+
+            for (auto it = nodes.end() - 1; it >= nodes.begin(); --it)
+            {
+                int offset = inorder_map[(*it)->val] - inorder_map[node->val];
+
+                if (offset > 0 && offset < min_offset)
+                {
+                    parent = it;
+                    if (1 == offset)
+                        break;
+                    min_offset = offset;
+                }
+            }
+
+            (*parent)->left = node;
+            if ((*parent)->right)
+                nodes.erase(parent);
+            nodes.push_back(node);
+        }
+
+        return root;
     }
 };
 
@@ -1223,16 +1325,16 @@ int main()
     // cout << "Maximum Path Sum: " << solu.maxPathSum(root) << endl;
 
     // 105. Construct Binary Tree from Preorder and Inorder Traversal
-    vector<int> preorderee = { 56, 48, 33, 27, 36, 34, 52, 50, 54, 55, 59, 57, 58, 69, 66, 68 };
-    vector<int> inorderee = { 27, 33, 34, 36, 48, 50, 52, 54, 55, 56, 57, 58, 59, 66, 68, 69 };
-    TreeNode *root = solu.buildTreeFromPreInOrder(preorderee, inorderee);
-    tree.printTree(root);
+    // vector<int> preorderee = { 56, 48, 33, 27, 36, 34, 52, 50, 54, 55, 59, 57, 58, 69, 66, 68 };
+    // vector<int> inorderee = { 27, 33, 34, 36, 48, 50, 52, 54, 55, 56, 57, 58, 59, 66, 68, 69 };
+    // TreeNode *root = solu.buildTreeFromPreInOrder(preorderee, inorderee);
+    // tree.printTree(root);
     
     // 106. Construct Binary Tree from Inorder and Postorder Traversal
-    // vector<int> inorderee = { 27, 33, 34, 36, 48, 50, 52, 54, 55, 56, 57, 58, 59, 66, 68, 69 };
-    // vector<int> postorderee = { 27, 34, 36, 33, 50, 55, 54, 52, 48, 58, 57, 68, 66, 69, 59, 56 };
-    // TreeNode *root = solu.buildTreeFromInPostOrder(inorderee, postorderee);
-    // tree.printTree(root);
+    vector<int> inorderee = { 27, 33, 34, 36, 48, 50, 52, 54, 55, 56, 57, 58, 59, 66, 68, 69 };
+    vector<int> postorderee = { 27, 34, 36, 33, 50, 55, 54, 52, 48, 58, 57, 68, 66, 69, 59, 56 };
+    TreeNode *root = solu.buildTreeFromInPostOrder(inorderee, postorderee);
+    tree.printTree(root);
 
     // 889. Construct Binary Tree from Preorder and Postorder Traversal
     // vector<int> preorderee = { 56, 48, 33, 27, 36, 34, 52, 50, 54, 55, 59, 57, 58, 69, 66, 68 };
